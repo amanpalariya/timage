@@ -1,4 +1,4 @@
-from PIL import Image
+from PIL import Image, ImageEnhance
 
 
 class Timage:
@@ -6,29 +6,27 @@ class Timage:
     __MAX_VALUE = 255
     __ascii_image = None
 
-    """
-    Initializes the engine with PIL Image.
-    """
-
-    def __init__(self, image: Image):
-        self.__image = image.convert("L")
-
-    """
-    Returns a 2D array of characters that can be printed in monospaced font.
-    """
+    def __init__(self, image: Image, contrast: float = 1):
+        """
+        Initializes the engine with PIL Image.
+        """
+        self.__image = ImageEnhance.Contrast(
+            image.convert("L")).enhance(contrast)
 
     def get_ascii_image(self):
+        """
+        Returns a 2D array of characters that can be printed in monospaced font.
+        """
         if self.__ascii_image == None:
             self.__build_ascii_image()
         return self.__ascii_image
 
-    """
-    Prints the image on console.
-    Argument: width_factor (default 2)
-              Stretches the image horizontally to account for aspect ratio of typeface
-    """
-
     def pretty_print(self, width_factor=2):
+        """
+        Prints the image on console.
+        Argument: width_factor (default 2)
+                  Stretches the image horizontally to account for aspect ratio of typeface
+        """
         assert type(width_factor) is int, "width_factor must be an integer"
         if self.__ascii_image == None:
             self.__build_ascii_image()
